@@ -15,9 +15,6 @@ const Sidebar = () => {
     <aside className="sidebar">
       <div className="sidebar-header">
         <div className="logo-area">
-          <div className="logo-icon">
-            <BrainCircuit size={24} color="white" />
-          </div>
           <span className="logo-text">Agentic Analytics</span>
         </div>
       </div>
@@ -35,16 +32,7 @@ const Sidebar = () => {
         ))}
       </nav>
 
-      <div className="sidebar-footer">
-        <button className="nav-item">
-            <Settings size={20} className="nav-icon" />
-            <span className="nav-label">Settings</span>
-        </button>
-        <button className="nav-item">
-            <LogOut size={20} className="nav-icon" />
-            <span className="nav-label">Logout</span>
-        </button>
-      </div>
+
     </aside>
   );
 };

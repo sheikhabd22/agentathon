@@ -1,16 +1,42 @@
-# React + Vite
+# 🧠 Unified Intelligence Agent for MSMEs
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An **AI-powered agent** that unifies fragmented business data (CRM, e-commerce, payments) and **proactively detects risks and patterns** for small businesses.
 
-Currently, two official plugins are available:
+Built for a **Google Hackathon** using **Stitch, Jules, and a Gemini-based agent architecture**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🚩 Problem
+MSMEs rely on fragmented systems and manual analysis, causing delayed insights and missed risks.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 💡 Solution
+An autonomous AI agent that:
+- Ingests and unifies structured business data  
+- Continuously analyzes business health  
+- Flags risks early with clear explanations  
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+This is **not a dashboard** — it’s an **AI business analyst**.
+
+---
+
+## ✨ Key Features
+- Unified business intelligence  
+- Proactive risk detection  
+- Explainable AI insights  
+- Agent-based architecture  
+
+---
+
+## 🛠 Tech Stack
+- **UI:** Stitch  
+- **Backend:** FastAPI  
+- **AI:** Gemini  
+- **Agents & Code:** Jules + AntiGravity-style orchestration  
+
+---
+
+## 🎯 Hackathon Focus
+Built to demonstrate **agentic AI**, explainability, and real-world MSME impact.
+

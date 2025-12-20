@@ -20,13 +20,6 @@ const Topbar = ({ title }) => {
                 <button className="icon-btn">
                     <HelpCircle size={20} />
                 </button>
-                <button className="icon-btn">
-                    <Bell size={20} />
-                    <span className="badge">3</span>
-                </button>
-                <div className="user-profile">
-                    <div className="avatar">JD</div>
-                </div>
             </div>
         </header>
     );
