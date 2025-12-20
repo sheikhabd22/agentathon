@@ -1,0 +1,11 @@
+customer_id,customer_name,segment,last_order_date,total_spend
+C001,Alpha Corp,Enterprise,2024-07-02,92000
+C002,Beta Industries,Enterprise,2024-06-28,87500
+C003,Gamma Solutions,Mid-Market,2024-06-15,64000
+C004,Delta Traders,SMB,2024-07-18,28000
+C005,Epsilon Retail,SMB,2024-05-30,19500
+C006,Zeta Manufacturing,Enterprise,2024-06-05,71000
+C007,Eta Logistics,Mid-Market,2024-07-01,45000
+C008,Theta Services,SMB,2024-05-18,22000
+C009,Iota Tech,Enterprise,2024-07-20,83000
+C010,Kappa Stores,SMB,2024-06-01,26000
