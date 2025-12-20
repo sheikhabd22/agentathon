@@ -1,3 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
 :root {
   --font-sans: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -42,10 +47,13 @@ body {
   box-sizing: border-box;
 }
 
-a {
+.content a {
   color: var(--color-primary);
   text-decoration: none;
 }
+
+
+
 
 button {
   font-family: inherit;
@@ -72,15 +80,7 @@ button {
 .text-success { color: var(--color-success); }
 .text-warning { color: var(--color-warning); }
 
-.flex { display: flex; }
-.flex-col { flex-direction: column; }
-.items-center { align-items: center; }
-.justify-between { justify-content: space-between; }
-.gap-2 { gap: 8px; }
-.gap-4 { gap: 16px; }
 
-.h-full { height: 100%; }
-.w-full { width: 100%; }
 
 .btn {
   display: inline-flex;
