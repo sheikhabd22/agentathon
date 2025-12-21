@@ -128,20 +128,66 @@
     display: flex;
     align-items: flex-end;
     gap: 12px;
-    background-color: #f8f9fa;
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
+    background-color: var(--color-bg-surface);
+    /* Dynamic background for dark mode */
+    border: 1px solid transparent;
+    /* Transparent so gradient flows? No, we need border-radius masking */
+    border-radius: 16px;
+    /* Slightly more rounded */
     padding: 12px;
     transition: all 0.2s;
     position: relative;
     z-index: 2;
-    overflow: hidden; 
+    overflow: hidden;
+}
+
+/* Base styles are fine, but for Gemini Effect: */
+.gemini-input-wrapper {
+    background-color: var(--color-bg-surface);
+    border: 1px solid transparent;
+    /* We need padding-box for background and border-box for the gradient border trick? */
+    /* Actually using the ::before and ::after technique is safer */
+}
+
+.gemini-input-wrapper::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300%;
+    height: 300%;
+    background: conic-gradient(from 0deg,
+            #4285F4,
+            #9B72CB,
+            #D96570,
+            #F4B400,
+            #0F9D58,
+            #4285F4);
+    animation: rotateBorder 4s linear infinite;
+    z-index: -2;
+    opacity: 0.6;
+    /* Softer for input */
+}
+
+/* Inner mask */
+.gemini-input-wrapper::after {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    background: var(--color-bg-surface);
+    border-radius: 14px;
+    /* r - 2 */
+    z-index: -1;
 }
 
 .input-wrapper:focus-within {
-    background-color: white;
-    border-color: var(--color-primary);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.15);
+}
+
+.input-wrapper:focus-within::before {
+    opacity: 1;
+    /* Brighten on focus */
 }
 
 .input-wrapper textarea {
@@ -219,22 +265,22 @@
 }
 
 .border-animation-canvas {
-  filter: blur(0.3px);
+    filter: blur(0.3px);
 }
 
 .input-wrapper {
-  position: relative;
-  overflow: hidden;
+    position: relative;
+    overflow: hidden;
 }
 
 .border-animation-canvas {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
 }
 
-.input-wrapper > *:not(.border-animation-canvas) {
-  position: relative;
-  z-index: 2;
+.input-wrapper>*:not(.border-animation-canvas) {
+    position: relative;
+    z-index: 2;
 }

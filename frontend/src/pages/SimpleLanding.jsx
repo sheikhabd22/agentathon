@@ -2,17 +2,24 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-import Silk from "@/components/Prism";
+import FloatingLines from "@/components/FloatingLines";
 import "./SimpleLanding.css";
 
 const SimpleLanding = () => {
   return (
     <div className="simple-landing">
       {/* 
-         Increased speed and noiseIntensity for "more visible silk"
-         Color remains white but interacts with the background multiply blend mode 
+         New FloatingLines Background with Google-ish Colors 
+         Using a gradient that hints at Blue, Red, Yellow, Green
       */}
-      <Silk speed={2.5} noiseIntensity={2.5} />
+      <FloatingLines
+        linesGradient={["#4285F4", "#EA4335", "#FBBC05", "#34A853"]}
+        animationSpeed={0.5}
+        lineCount={[4]}
+        lineDistance={[4]}
+        enabledWaves={['bottom', 'middle']}
+        mixBlendMode="screen"
+      />
 
       <motion.div
         className="simple-content"

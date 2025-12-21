@@ -13,8 +13,16 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Landing page — NO NAVBAR */}
-        <Route path="/" element={<SimpleLanding />} />
+        {/* Landing page — WITH NAVBAR */}
+        <Route
+          path="/"
+          element={
+            <>
+              <Navbar />
+              <SimpleLanding />
+            </>
+          }
+        />
 
         {/* App pages — WITH NAVBAR + DASHBOARD LAYOUT */}
         <Route
