@@ -24,6 +24,7 @@ const ChatInterface = () => {
     const [inputValue, setInputValue] = useState('');
     const [isThinking, setIsThinking] = useState(false);
     const messagesEndRef = useRef(null);
+    const inputWrapperRef = useRef(null);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -33,7 +34,86 @@ const ChatInterface = () => {
         scrollToBottom();
     }, [messages, isThinking]);
 
-    const handleSend = () => {
+useEffect(() => {
+  const wrapper = inputWrapperRef.current;
+  if (!wrapper) return;
+
+  const canvas = wrapper.querySelector(".border-animation-canvas");
+  if (!canvas) return;
+
+  const ctx = canvas.getContext("2d");
+  let raf;
+  let t = 0;
+
+  const resize = () => {
+    const rect = wrapper.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+  };
+
+  const draw = () => {
+    resize();
+    const w = canvas.width;
+    const h = canvas.height;
+    const r = 12;
+
+    ctx.clearRect(0, 0, w, h);
+
+    const glow = 0.5 + Math.sin(t * 0.02) * 0.15;
+
+    // Outer glow
+    ctx.strokeStyle = `rgba(66,133,244,${0.15 * glow})`;
+    ctx.lineWidth = 14;
+    ctx.setLineDash([]);
+
+    ctx.beginPath();
+    roundedRect(ctx, 0, 0, w, h, r);
+    ctx.stroke();
+
+    // Inner glow
+    ctx.strokeStyle = `rgba(66,133,244,${0.35 * glow})`;
+    ctx.lineWidth = 6;
+
+    ctx.beginPath();
+    roundedRect(ctx, 0, 0, w, h, r);
+    ctx.stroke();
+
+    // Core border
+    ctx.strokeStyle = `rgba(66,133,244,0.7)`;
+    ctx.lineWidth = 1.5;
+
+    ctx.beginPath();
+    roundedRect(ctx, 0, 0, w, h, r);
+    ctx.stroke();
+
+    t++;
+    raf = requestAnimationFrame(draw);
+  };
+
+  draw();
+  window.addEventListener("resize", resize);
+
+  return () => {
+    cancelAnimationFrame(raf);
+    window.removeEventListener("resize", resize);
+  };
+}, []);
+
+function roundedRect(ctx, x, y, w, h, r) {
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+}
+
+
+
+    const handleSend = async () => {
         if (!inputValue.trim()) return;
 
         const newUserMsg = {
@@ -47,17 +127,40 @@ const ChatInterface = () => {
         setInputValue('');
         setIsThinking(true);
 
-        // Simulate agent response
-        setTimeout(() => {
+        try {
+            const resp = await fetch('/agent/query', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ question: newUserMsg.content })
+            });
+
+            if (!resp.ok) {
+                throw new Error(`Agent API error: ${resp.status}`);
+            }
+
+            const data = await resp.json();
+
+            const agentText = (data && data.text) ? data.text : 'Sorry — I could not generate a response.';
+
             const agentMsg = {
                 id: Date.now() + 1,
                 sender: 'agent',
-                content: 'I have analyzed the recent transaction data. It appears there is a discrepancy in the "Office Supplies" category which is 15% higher than average. This correlates with the new vendor onboarded last week.',
+                content: agentText,
                 timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
+
             setMessages(prev => [...prev, agentMsg]);
+        } catch (err) {
+            const errMsg = {
+                id: Date.now() + 2,
+                sender: 'agent',
+                content: `Error contacting agent: ${err.message}`,
+                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+            setMessages(prev => [...prev, errMsg]);
+        } finally {
             setIsThinking(false);
-        }, 2000);
+        }
     };
 
     const handleKeyDown = (e) => {
@@ -66,6 +169,7 @@ const ChatInterface = () => {
             handleSend();
         }
     };
+{isThinking && <canvas className="border-animation-canvas" />}
 
     return (
         <motion.div
@@ -121,20 +225,28 @@ const ChatInterface = () => {
                                 </button>
                             ))}
                         </div>
-                    )}
-                    <div className="input-wrapper">
-                        <button className="attach-btn"><Paperclip size={20} /></button>
-                        <textarea
-                            value={inputValue}
-                            onChange={(e) => setInputValue(e.target.value)}
-                            onKeyDown={handleKeyDown}
-                            placeholder="Ask anything about your business data..."
-                            rows={1}
-                        />
-                        <button className="send-btn" onClick={handleSend} disabled={!inputValue.trim()}>
-                            <Send size={20} />
-                        </button>
-                    </div>
+                    )}    
+                                <div className="input-wrapper" ref={inputWrapperRef}>
+            <canvas className="border-animation-canvas" />
+
+            <button className="attach-btn">
+                <Paperclip size={20} />
+            </button>
+
+            <textarea
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Ask anything about your business data..."
+                rows={1}
+            />
+
+            <button className="send-btn" onClick={handleSend} disabled={!inputValue.trim()}>
+                <Send size={20} />
+            </button>
+            </div>  
+
+
                     <div className="disclaimer">
                         AI can make mistakes. Please verify important financial decisions.
                     </div>

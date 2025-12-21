@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { ArrowUpRight, ArrowDownRight, Database, ShoppingCart, CreditCard, Users, Activity } from 'lucide-react';
 import { motion } from 'framer-motion';
 import './Dashboard.css';
 
-const data = [
+const defaultFallbackData = [
     { name: 'Mon', revenue: 4000, orders: 240, active: 2400 },
     { name: 'Tue', revenue: 3000, orders: 139, active: 2210 },
     { name: 'Wed', revenue: 2000, orders: 980, active: 2290 },
@@ -26,20 +26,66 @@ const containerVariants = {
 
 const itemVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: {
-        y: 0,
-        opacity: 1
-    }
+    visible: { y: 0, opacity: 1 }
 };
 
-const Dashboard = () => {
+export default function Dashboard() {
+    const [data, setData] = useState(defaultFallbackData);
+    const [summary, setSummary] = useState({
+        revenue: '$24,680',
+        customers: '1,248',
+        pending_orders: '86'
+    });
+
+    useEffect(() => {
+        let mounted = true;
+
+        // Fetch monitoring overview (summary)
+        fetch('/monitoring/overview')
+            .then((r) => {
+                if (!r.ok) throw new Error('overview fetch failed');
+                return r.json();
+            })
+            .then((res) => {
+                if (!mounted) return;
+                if (res && res.summary) {
+                    setSummary((prev) => ({
+                        revenue: res.summary.revenue ?? prev.revenue,
+                        customers: res.summary.customers ?? prev.customers,
+                        pending_orders: res.summary.pending_orders ?? prev.pending_orders
+                    }));
+                }
+            })
+            .catch(() => {
+                // keep fallback
+            });
+
+        // Fetch full monitoring snapshot (timeseries)
+        fetch('/api/monitoring')
+            .then((r) => {
+                if (!r.ok) throw new Error('snapshot fetch failed');
+                return r.json();
+            })
+            .then((snap) => {
+                if (!mounted) return;
+                if (!snap) return;
+                if (Array.isArray(snap.timeseries)) {
+                    setData(snap.timeseries);
+                } else if (snap.metrics && Array.isArray(snap.metrics.timeseries)) {
+                    setData(snap.metrics.timeseries);
+                } else if (snap.metrics && Array.isArray(snap.metrics.history)) {
+                    setData(snap.metrics.history);
+                }
+            })
+            .catch(() => {
+                // ignore and keep fallback
+            });
+
+        return () => { mounted = false; };
+    }, []);
+
     return (
-        <motion.div
-            className="dashboard-container"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-        >
+        <motion.div className="dashboard-container" variants={containerVariants} initial="hidden" animate="visible">
             {/* Top Status Bar */}
             <motion.div className="status-grid" variants={itemVariants}>
                 <div className="status-card">
@@ -73,11 +119,9 @@ const Dashboard = () => {
                 <div className="metric-card">
                     <div className="metric-header">
                         <span className="metric-title">Total Revenue</span>
-                        <span className="metric-trend positive">
-                            <ArrowUpRight size={16} /> +12.5%
-                        </span>
+                        <span className="metric-trend positive"><ArrowUpRight size={16} /> +12.5%</span>
                     </div>
-                    <div className="metric-value">$24,680</div>
+                    <div className="metric-value">{summary.revenue}</div>
                     <div className="metric-chart">
                         <ResponsiveContainer width="100%" height={60}>
                             <AreaChart data={data}>
@@ -90,11 +134,9 @@ const Dashboard = () => {
                 <div className="metric-card">
                     <div className="metric-header">
                         <span className="metric-title">Active Customers</span>
-                        <span className="metric-trend positive">
-                            <ArrowUpRight size={16} /> +5.2%
-                        </span>
+                        <span className="metric-trend positive"><ArrowUpRight size={16} /> +5.2%</span>
                     </div>
-                    <div className="metric-value">1,248</div>
+                    <div className="metric-value">{summary.customers}</div>
                     <div className="metric-chart">
                         <ResponsiveContainer width="100%" height={60}>
                             <AreaChart data={data}>
@@ -107,11 +149,9 @@ const Dashboard = () => {
                 <div className="metric-card">
                     <div className="metric-header">
                         <span className="metric-title">Pending Orders</span>
-                        <span className="metric-trend negative">
-                            <ArrowDownRight size={16} /> -2.4%
-                        </span>
+                        <span className="metric-trend negative"><ArrowDownRight size={16} /> -2.4%</span>
                     </div>
-                    <div className="metric-value">86</div>
+                    <div className="metric-value">{summary.pending_orders}</div>
                     <div className="metric-chart">
                         <ResponsiveContainer width="100%" height={60}>
                             <BarChart data={data}>
@@ -148,9 +188,7 @@ const Dashboard = () => {
                             <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#5f6368', fontSize: 12 }} dy={10} />
                             <YAxis axisLine={false} tickLine={false} tick={{ fill: '#5f6368', fontSize: 12 }} />
                             <CartesianGrid vertical={false} stroke="#e8eaed" />
-                            <Tooltip
-                                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)' }}
-                            />
+                            <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06)' }} />
                             <Area type="monotone" dataKey="revenue" stroke="#1a73e8" fillOpacity={1} fill="url(#colorRevenue)" strokeWidth={2} name="Revenue" />
                             <Area type="monotone" dataKey="orders" stroke="#f29900" fillOpacity={1} fill="url(#colorOrders)" strokeWidth={2} name="Orders" />
                         </AreaChart>
@@ -173,13 +211,10 @@ const Dashboard = () => {
                         <Users size={20} className="text-success" />
                         <h4>Customer Retention</h4>
                     </div>
-                    <p>Returing customer rate increased by <strong>15%</strong> this week due to the new loyalty campaign.</p>
+                    <p>Returning customer rate increased by <strong>15%</strong> this week due to the new loyalty campaign.</p>
                     <button className="btn btn-outline" style={{ marginTop: 'auto' }}>View Report</button>
                 </div>
             </motion.div>
-
         </motion.div>
     );
-};
-
-export default Dashboard;
+}

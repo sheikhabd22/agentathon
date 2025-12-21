@@ -4,7 +4,7 @@
 
 
 :root {
-  --font-sans: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --font-sans: 'Google Sans', 'Rationale', system-ui, Avenir, Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
   --color-bg-body: #f8f9fa;
@@ -128,4 +128,12 @@ button {
 }
 ::-webkit-scrollbar-track {
     background: transparent;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
 }
