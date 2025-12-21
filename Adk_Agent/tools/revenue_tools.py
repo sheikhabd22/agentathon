@@ -6,6 +6,7 @@ from ..data_access.revenue_data import (
 )
 from ..data_access.crm_data import top_customers
 from ..services.memory import log_insight
+from ..services.visualization import create_kpi_visual, create_trend_visual
 
 def _revenue_health():
     """
@@ -15,7 +16,7 @@ def _revenue_health():
     - recent revenue performance
     - business growth or slowdown
 
-    Returns KPIs, anomaly flags, causal hints, and recommendations.
+    Returns KPIs, anomaly flags, causal hints, recommendations, and optional visualization specs.
     """
     kpis = compute_revenue_kpis()
     anomaly = detect_revenue_anomaly(kpis)
@@ -45,12 +46,23 @@ def _revenue_health():
     else:
         recs.append("Maintain current campaigns; monitor segments for emerging changes.")
 
+    # Generate visualization spec
+    status = "negative" if anomaly["is_anomaly"] else "positive" if kpis["revenue_change_pct"] > 0 else "warning"
+    visual = create_kpi_visual(
+        title="Revenue",
+        value=kpis["current_revenue"],
+        status=status,
+        unit="$",
+        change_pct=kpis["revenue_change_pct"]
+    )
+
     insight = {
         "kpis": kpis,
         "anomaly": anomaly,
         "signals": signals,
         "explanation": " ".join(explanation) if explanation else "Revenue appears stable.",
         "recommendations": recs,
+        "visual": visual  # Include visualization spec
     }
 
     # Persist insight to memory
