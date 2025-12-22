@@ -22,14 +22,16 @@ body,
   align-items: center;
   justify-content: center;
 
-  padding: 0 6rem;
+  padding: 0;
+  /* Visual adjustment to slightly nudge everything to the left as requested */
+  padding-right: 40px;
   overflow: hidden;
-  background-color: #ffffff;
+  background-color: #000000;
   background-image:
-    radial-gradient(circle at 15% 50%, rgba(66, 133, 244, 0.15), transparent 25%),
-    radial-gradient(circle at 85% 30%, rgba(234, 67, 53, 0.15), transparent 25%),
-    radial-gradient(circle at 50% 80%, rgba(251, 188, 5, 0.15), transparent 25%),
-    radial-gradient(circle at 50% 20%, rgba(52, 168, 83, 0.15), transparent 25%);
+    radial-gradient(circle at 15% 50%, rgba(66, 133, 244, 0.08), transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(234, 67, 53, 0.08), transparent 25%),
+    radial-gradient(circle at 50% 80%, rgba(251, 188, 5, 0.08), transparent 25%),
+    radial-gradient(circle at 50% 20%, rgba(52, 168, 83, 0.08), transparent 25%);
 }
 
 /* ===== BACKGROUND (SILK) ===== */
@@ -41,8 +43,8 @@ body,
   height: 100% !important;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.4;
-  mix-blend-mode: multiply;
+  opacity: 0.8;
+  mix-blend-mode: screen;
 }
 
 /* ===== CONTENT ===== */
@@ -61,12 +63,12 @@ body,
   font-weight: 700;
   line-height: 1.15;
   margin-bottom: 1.2rem;
-  color: #202124;
+  color: #e8eaed;
 }
 
 .simple-content p {
   font-size: 1.05rem;
-  color: #5f6368;
+  color: #9aa0a6;
   line-height: 1.6;
   margin-bottom: 2rem;
 }
@@ -82,8 +84,8 @@ body,
   border-radius: 9999px;
   font-weight: 500;
   text-decoration: none;
-  color: #1a73e8;
-  background: #fff;
+  color: #8ab4f8;
+  background: #101010;
   z-index: 1;
   overflow: hidden;
   transition: all 0.3s ease;
@@ -117,7 +119,7 @@ body,
   position: absolute;
   inset: 2px;
   /* Border width */
-  background: white;
+  background: #101010;
   border-radius: 9999px;
   z-index: -1;
   transition: background 0.3s ease;
@@ -125,12 +127,12 @@ body,
 
 .gemini-btn:hover {
   transform: scale(1.02);
-  color: #174ea6;
+  color: #aecbfa;
   box-shadow: 0 4px 15px rgba(66, 133, 244, 0.2);
 }
 
 .gemini-btn:hover::after {
-  background: #f8fafd;
+  background: #202124;
 }
 
 @keyframes rotateBorder {
@@ -147,7 +149,7 @@ body,
 .trust-text {
   margin-top: 1.2rem;
   font-size: 0.85rem;
-  color: #5f6368;
+  color: #9aa0a6;
 }
 
 /* ===== MOBILE ===== */
