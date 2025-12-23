@@ -41,6 +41,6 @@ This is **not a dashboard** — it’s an **AI business analyst**.
 Built to demonstrate **agentic AI**, explainability, and real-world MSME impact.
 
 
-##Landing Page
+## Landing Page
 <img width="1884" height="977" alt="image" src="https://github.com/user-attachments/assets/4ecfab6a-56c8-411a-b55a-b18863efc387" />
 
